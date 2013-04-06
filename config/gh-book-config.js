@@ -5,8 +5,8 @@
     paths: {
       aloha: 'http://wysiwhat.github.com/Aloha-Editor/src/lib/aloha',
       'bookish/auth': 'gh-book/auth',
-      base64: 'node_modules/github-js/lib/base64',
-      github: 'node_modules/github-js/github'
+      base64: 'node_modules/github-client/lib/base64',
+      github: 'node_modules/github-client/github'
     },
     shim: {
       github: {
