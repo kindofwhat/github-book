@@ -106,7 +106,7 @@
         <item id="toc-ncx"
           
               href="toc.ncx"
-              media-type=""/>
+              media-type="application/x-dtbncx+xml"/>
     
     </manifest>
 
