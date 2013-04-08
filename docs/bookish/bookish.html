@@ -1,0 +1,57 @@
+<!DOCTYPE html>  <html> <head>   <title>bookish.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="atc.html">                 atc.coffee               </a>                                           <a class="source" href="bookish.html">                 bookish.coffee               </a>                                           <a class="source" href="auth.html">                 auth.coffee               </a>                                           <a class="source" href="controller.html">                 controller.coffee               </a>                                           <a class="source" href="languages.html">                 languages.coffee               </a>                                           <a class="source" href="media-types.html">                 media-types.coffee               </a>                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="strings.html">                 strings.coffee               </a>                                           <a class="source" href="views.html">                 views.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               bookish.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h1>Application Root</h1>
+
+<p>This is the start of an abstract bookish application. Steps:</p>
+
+<ol>
+<li>Load dependencies (JS/CSS/JSON)</li>
+<li>Register client-side routes</li>
+</ol>
+
+<p><strong>TODO:</strong> Load any HTML/JSON sent from the server that is sprinkled in the HTML file.</p>
+
+<p>For example, if the user goes to a piece of content we already send
+the content inside a <code>div</code> tag.
+The same can be done with metadata/roles (as a JSON object sent in the HTML)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span>
+  <span class="s">&#39;jquery&#39;</span>
+  <span class="s">&#39;underscore&#39;</span>
+  <span class="s">&#39;backbone&#39;</span>
+  <span class="s">&#39;marionette&#39;</span>
+  <span class="s">&#39;aloha&#39;</span>
+  <span class="s">&#39;bookish/auth&#39;</span>
+  <span class="s">&#39;bookish/controller&#39;</span>
+  <span class="s">&#39;css!bookish&#39;</span>
+<span class="p">],</span> <span class="nf">(jQuery, _, Backbone, Marionette, Aloha, Auth, Controller) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h1>Application Code</h1>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Begin listening to route changes
+and load the initial views based on the URL.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Controller</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h1>Various HACKS</h1>
+
+<p>These cross over many modules and do not have a better home than here.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Global Variables like jQuery</h2>
+
+<p><strong>HACK:</strong> discourage people from using the global jQuery
+and instead use the <code>requirejs</code> version.
+This helps ensure plugins that extend jQuery (like bootstrap)
+are properly listed as dependencies in requirejs' <code>define</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@jQuery = @$ = </span><span class="o">-&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;You should add &quot;jquery&quot; to your dependencies in define() instead of using the global jQuery!&#39;</span>
+    <span class="nx">jQuery</span><span class="p">.</span><span class="nx">apply</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">arguments</span>
+  <span class="nx">jQuery</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">@jQuery</span><span class="p">,</span> <span class="nx">jQuery</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>jQueryUI in Aloha relies on a very old function.
+Used for re-ordering Authors and copyright holders
+in the Select2 widget</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">jQuery.curCSS = </span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">css</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h1>Hash tags in links</h1>
+
+<p>Code should use the <code>Controller</code> module to change the page
+instead of relying on the URL</p>
+
+<p>For now, I trust that the programmer knows what they are doing and:</p>
+
+<ol>
+<li>warn them</li>
+<li>trigger the route change</li>
+<li>hope a router matches that URL</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">jQuery</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="kc">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="s">&#39;a:not([data-bypass])&#39;</span><span class="p">,</span> <span class="nf">(evt) -&gt;</span>
+    <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+    <span class="nv">href = </span><span class="nx">$</span><span class="p">(</span><span class="nx">@</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;href&#39;</span><span class="p">)</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&quot;User clicked on an internal link. Use the bookish/controller module instead of the URL </span><span class="si">#{</span><span class="nx">href</span><span class="si">}</span><span class="s">&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p><code>Backbone.history.navigate</code> is sufficient for all Routers and will
+trigger the correct events. The Router's internal <code>navigate</code> method
+calls this anyways.</p>
+
+<p>Added the <code>javascript:</code> test because Select2 generates anchor links
+but we should not change the URL.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">href</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="k">if</span> <span class="nx">href</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="sr">/^javascript:/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">href</span><span class="p">)</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

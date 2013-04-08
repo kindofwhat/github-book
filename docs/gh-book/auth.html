@@ -1,0 +1,55 @@
+<!DOCTYPE html>  <html> <head>   <title>auth.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="gh-book.html">                 gh-book.coffee               </a>                                           <a class="source" href="auth.html">                 auth.coffee               </a>                                           <a class="source" href="views.html">                 views.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               auth.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s">&#39;github&#39;</span><span class="p">,</span> <span class="s">&#39;backbone&#39;</span><span class="p">],</span> <span class="nf">(Github, Backbone) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Singleton variables representing the Github user and current repo</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">github = </span><span class="kc">null</span>
+  <span class="nv">repo = </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>For the UI, provide a backbone "interface" to the auth piece</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">AuthModel = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span>
+    <span class="nv">defaults:</span>
+      <span class="nv">id: </span><span class="s">&#39;&#39;</span> <span class="c1"># Set `username` to `id` so Save view knows when to alert the user to log in</span>
+      <span class="nv">password: </span><span class="s">&#39;&#39;</span>
+      <span class="nv">auth: </span><span class="s">&#39;basic&#39;</span>
+
+      <span class="nv">repoUser: </span><span class="s">&#39;philschatz&#39;</span>
+      <span class="nv">repoName: </span><span class="s">&#39;github-book&#39;</span>
+
+      <span class="nv">branch: </span><span class="s">&#39;sample-book&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p><strong>Remember:</strong> <code>rootPath</code> always needs a trailing slash!</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">rootPath: </span><span class="s">&#39;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Updates the singleton variables <code>github</code> and <code>repo</code></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">_update: </span><span class="o">-&gt;</span>
+      <span class="nv">credentials =</span>
+        <span class="nv">username: </span><span class="nx">@get</span> <span class="s">&#39;id&#39;</span>
+        <span class="nv">password: </span><span class="nx">@get</span> <span class="s">&#39;password&#39;</span>
+        <span class="nv">token: </span>   <span class="nx">@get</span> <span class="s">&#39;token&#39;</span>
+        <span class="nv">auth: </span>    <span class="nx">@get</span> <span class="s">&#39;auth&#39;</span>
+      <span class="nv">github = </span><span class="k">new</span> <span class="nx">Github</span><span class="p">(</span><span class="nx">credentials</span><span class="p">)</span>
+      <span class="nv">repo = </span><span class="kc">null</span>
+
+      <span class="nv">json = </span><span class="nx">@toJSON</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">repoUser</span> <span class="o">and</span> <span class="nx">json</span><span class="p">.</span><span class="nx">repoName</span>
+        <span class="nv">repo = </span><span class="nx">github</span><span class="p">.</span><span class="nx">getRepo</span> <span class="nx">json</span><span class="p">.</span><span class="nx">repoUser</span><span class="p">,</span> <span class="nx">json</span><span class="p">.</span><span class="nx">repoName</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Listen to the RateLimit changes and update the model
+@set {rateRemaining: -1, rateLimit: -1}</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">github</span><span class="p">.</span><span class="nx">onRateLimitChanged</span> <span class="p">(</span><span class="nx">remaining</span><span class="p">,</span> <span class="nx">limit</span><span class="p">)</span> <span class="o">=&gt;</span>
+        <span class="nx">@set</span> <span class="p">{</span><span class="nv">rateRemaining: </span><span class="nx">remaining</span><span class="p">,</span> <span class="nv">rateLimit: </span><span class="nx">limit</span><span class="p">}</span>
+
+
+    <span class="nv">initialize: </span><span class="o">-&gt;</span>
+      <span class="nx">@_update</span><span class="p">()</span>
+
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;change:id&#39;</span><span class="p">,</span>       <span class="nx">@_update</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;change:password&#39;</span><span class="p">,</span> <span class="nx">@_update</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;change:token&#39;</span><span class="p">,</span>    <span class="nx">@_update</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;change:auth&#39;</span><span class="p">,</span>     <span class="nx">@_update</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;change:repoUser&#39;</span><span class="p">,</span> <span class="nx">@_update</span>
+      <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;change:repoName&#39;</span><span class="p">,</span> <span class="nx">@_update</span>
+
+    <span class="nv">authenticate: </span><span class="nf">(credentials) -&gt;</span> <span class="nx">@set</span> <span class="nx">credentials</span>
+    <span class="nv">setRepo: </span><span class="nf">(repoUser, repoName) -&gt;</span> <span class="nx">@set</span>
+      <span class="nv">repoUser: </span><span class="nx">repoUser</span>
+      <span class="nv">repoName: </span><span class="nx">repoName</span>
+
+    <span class="nv">getRepo: </span><span class="o">-&gt;</span> <span class="nx">repo</span>
+    <span class="nv">getUser: </span><span class="o">-&gt;</span> <span class="nx">github</span><span class="o">?</span><span class="p">.</span><span class="nx">getUser</span><span class="p">()</span>
+    <span class="nv">signOut: </span><span class="o">-&gt;</span>
+      <span class="nv">github = </span><span class="kc">null</span>
+      <span class="nv">repo = </span><span class="kc">null</span>
+      <span class="nx">@set</span> <span class="p">{</span>
+        <span class="nv">id: </span><span class="s">&#39;&#39;</span>
+        <span class="nv">password: </span><span class="s">&#39;&#39;</span>
+      <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>When saving do not run <code>Backbone.sync</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">sync: </span><span class="nf">(method, model, options) -&gt;</span>
+      <span class="nx">@_update</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Fire the success callback if it exists</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">options</span><span class="o">?</span><span class="p">.</span><span class="nx">success</span><span class="o">?</span><span class="p">()</span>
+
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">AuthModel</span><span class="p">()</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

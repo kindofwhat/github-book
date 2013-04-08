@@ -1,0 +1,27 @@
+<!DOCTYPE html>  <html> <head>   <title>strings.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="atc.html">                 atc.coffee               </a>                                           <a class="source" href="bookish.html">                 bookish.coffee               </a>                                           <a class="source" href="auth.html">                 auth.coffee               </a>                                           <a class="source" href="controller.html">                 controller.coffee               </a>                                           <a class="source" href="languages.html">                 languages.coffee               </a>                                           <a class="source" href="media-types.html">                 media-types.coffee               </a>                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="strings.html">                 strings.coffee               </a>                                           <a class="source" href="views.html">                 views.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               strings.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h1>i18n Strings</h1>
+
+<p>Contains internationalized strings that do not already occur in handlebars templates
+(the handlebars plugin already has a way of loading internationalized templates)</p>
+
+<p>These can be organized into separate files if they become too large or make
+more sense separately.
+See <a href="http://requirejs.org/docs/api.html#i18n">requirejs i18n</a> for more.</p>
+
+<p>I extended the original <code>i18n</code> plugin to return a function that can be used to
+look up a string and return the original string if none is found hopefully
+making it easier to internationalize.
+(all strings should be wrapped with that function)</p>
+
+<h2>Example Use:</h2>
+
+<pre><code>define ['jquery', ..., 'i18n!bookish/nls/strings'], ($, ..., __) -&gt;
+  alert __('Hello World')
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">define</span> <span class="s">&#39;root&#39;</span><span class="o">:</span>
+  <span class="s">&#39;gray&#39;</span><span class="o">:</span> <span class="s">&#39;grey&#39;</span>
+  <span class="s">&#39;blue&#39;</span><span class="o">:</span> <span class="s">&#39;azul&#39;</span>
+  <span class="s">&#39;green&#39;</span><span class="o">:</span> <span class="s">&#39;verde&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Different language files are stored in a separate <code>.js</code> file
+You can define regional variants as well and these will be
+assembled based on the language set by the browser.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="s">&#39;fr&#39;</span><span class="o">:</span> <span class="kc">false</span>
+  <span class="s">&#39;en-ca&#39;</span><span class="o">:</span> <span class="kc">false</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
