@@ -53,11 +53,6 @@
               href="chapter_001.xhtml"
               media-type="application/xhtml+xml"/>
     
-        <item id="chapter_002-xhtml"
-          
-              href="chapter_002.xhtml"
-              media-type="application/xhtml+xml"/>
-    
         <item id="chapter_003-xhtml"
           
               href="chapter_003.xhtml"
@@ -117,6 +112,11 @@
           
               href="images/Moby-Dick_FE_title_page.jpg"
               media-type="image/jpeg"/>
+    
+        <item id="chapter_002-xhtml"
+          
+              href="chapter_002.xhtml"
+              media-type="application/xhtml+xml"/>
     
     </manifest>
 
