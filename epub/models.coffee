@@ -182,7 +182,7 @@ define [
         # Add it to the set of all content and construct the correct model based on the mimetype
         mediaType = $item.attr 'media-type'
         path = $item.attr 'href'
-        ContentType = MEDIA_TYPES.get(mediaType).constructor
+        ContentType = MEDIA_TYPES.get(mediaType)
         model = new ContentType
           # Set the path to the file to be relative to the OPF file
           id: resolvePath(@id, path)
@@ -214,6 +214,9 @@ define [
 
       json
 
+    accepts: -> [ HTMLFile::mediaType, Models.Folder::mediaType ]
+
+
   PackageFile = BaseBook.extend PackageFileMixin
 
 
@@ -237,19 +240,12 @@ define [
 
 
   # Add the `HTMLFile` and `PackageFile` to the media types registry.
-  MEDIA_TYPES.add 'application/xhtml+xml',
-    constructor: HTMLFile
-    editAction: Controller.editContent
+  HTMLFile::editAction = -> Controller.editContent @
+  PackageFile::editAction = -> Controller.editBook @
+  Models.BookTocNode::accepts = -> [ Models.BookTocNode::mediaType, HTMLFile::mediaType ]
 
-  MEDIA_TYPES.add 'application/vnd.org.cnx.collection',
-    constructor: PackageFile
-    editAction: Controller.editBook
-    accepts:
-      'application/xhtml+xml': (book, model) ->
-        book.prependNewContent model
-
-  # Override the default `mediaType` for new content in the Book edit view.
-  Views.BookEditView::contentMediaType = 'application/xhtml+xml'
+  MEDIA_TYPES.add HTMLFile
+  MEDIA_TYPES.add PackageFile
 
   exports.EPUB_CONTAINER = new EPUBContainer()
 

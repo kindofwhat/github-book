@@ -2,7 +2,7 @@
 (function() {
 
   define(['underscore', 'backbone', 'bookish/media-types', 'bookish/controller', 'bookish/models', 'epub/models', 'bookish/auth', 'gh-book/views', 'css!bookish'], function(_, Backbone, MEDIA_TYPES, Controller, AtcModels, EpubModels, Auth, Views) {
-    var $signin, DEBUG, STORED_KEYS, XhtmlModel, b, props, readBinaryFile, readDir, readFile, resetDesktop, uuid, writeFile,
+    var $signin, AtcModels_Folder_accepts, DEBUG, STORED_KEYS, XhtmlModel, b, props, readBinaryFile, readDir, readFile, resetDesktop, uuid, writeFile,
       _this = this;
     DEBUG = true;
     uuid = b = function(a) {
@@ -152,9 +152,12 @@
         return "<html>\n  <head>\n    " + $head[0].innerHTML + "\n  </head>\n  <body>\n    " + $body[0].innerHTML + "\n  </body>\n</html>";
       }
     });
-    MEDIA_TYPES.add(XhtmlModel.prototype.mediaType, {
-      constructor: XhtmlModel
-    });
+    MEDIA_TYPES.add(XhtmlModel);
+    AtcModels_Folder_accepts = AtcModels.Folder.prototype.accepts();
+    AtcModels_Folder_accepts.push(XhtmlModel.prototype.mediaType);
+    AtcModels.Folder.prototype.accepts = function() {
+      return AtcModels_Folder_accepts;
+    };
     STORED_KEYS = ['repoUser', 'repoName', 'branch', 'rootPath', 'id', 'password'];
     Auth.on('change', function() {
       var key, value, _ref, _ref1, _results;
