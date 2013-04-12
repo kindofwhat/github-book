@@ -5,7 +5,7 @@ require.config
   paths:
 
     # Point to our version of Aloha
-    aloha: 'http://wysiwhat.github.com/Aloha-Editor/src/lib/aloha'
+    aloha: 'http://wysiwhat.github.io/Aloha-Editor/src/lib/aloha'
 
     # Change the Stub Auth piece
     'bookish/auth': 'gh-book/auth'
