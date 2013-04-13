@@ -12,7 +12,7 @@
               scheme="xsd:string">uuid</meta>
 
         <dc:language>en</dc:language>
-        <dc:title>Moby-Dick?</dc:title>
+        <dc:title>Moby-Dick</dc:title>
 
         <dc:creator id="creator"></dc:creator>
         <meta refines="#creator"
