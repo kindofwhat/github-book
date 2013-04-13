@@ -43,6 +43,8 @@ define [
   'select2'
   # Include CSS icons used by the toolbar
   'css!font-awesome'
+  # Include the main CSS file
+  'less!bookish'
 ], (exports, _, Backbone, Marionette, jQuery, Aloha, Controller, Models, MEDIA_TYPES, Languages, CONTENT_EDIT, SEARCH_BOX, SEARCH_RESULT, SEARCH_RESULT_ITEM, DND_HANDLE, DIALOG_WRAPPER, EDIT_METADATA, EDIT_ROLES, LANGUAGE_VARIANTS, ALOHA_TOOLBAR, SIGN_IN_OUT, ADD_VIEW, ADD_ITEM_VIEW, BOOK_EDIT, BOOK_EDIT_NODE, __) ->
 
 
@@ -76,14 +78,13 @@ define [
         top: 0
         left: 0
       helper: (evt) ->
-        title = model.get('title') or ''
+        title = model.get('title') or model.dereference().get('title') or ''
         shortTitle = title
         shortTitle = title.substring(0, 20) + '...' if title.length > 20
 
         # If the content is a pointer to a piece of content (`BookTocNode`)
         # then use the actual content's mediaType
-        mediaType = model.mediaType
-        mediaType = Models.ALL_CONTENT.get(model.contentId()).mediaType if model.contentId?()
+        mediaType = model.dereference().mediaType
 
         # Generate the handle div using a template
         $handle = jQuery DND_HANDLE
@@ -188,8 +189,14 @@ define [
                 model = $drag.data 'editor-model'
                 drop = $drop.data 'editor-model'
                 # Sanity-check before dropping:
+                # Dereference if this is a pointer
+                if drop.accepts().indexOf(model.mediaType) < 0
+                  model = model.dereference()
                 throw 'INVALID_DROP_MEDIA_TYPE' if drop.accepts().indexOf(model.mediaType) < 0
-                drop.addChild model
+
+                # Delay the call so jQuery.droppable has time to clean up before the DOM changes
+                delay = => drop.addChild model
+                setTimeout delay, 10
 
 
     # Add the hasChanged bit to the resulting JSON so the template can render an asterisk
@@ -671,8 +678,8 @@ define [
     editAction: -> @model.editAction()
 
     editSettings: ->
-      if @model.contentId
-        contentModel = Models.ALL_CONTENT.get @model.contentId()
+      if @model != @model.dereference()
+        contentModel = @model.dereference()
         originalTitle = contentModel?.get('title') or @model.get 'title'
         newTitle = prompt 'Edit Title. Enter a single "-" to delete this node in the ToC', originalTitle
         if '-' == newTitle
@@ -707,8 +714,8 @@ define [
 
       # If the content title changes and we have not overridden the title
       # rerender the node
-      if @model.contentId?()
-        contentModel = Models.ALL_CONTENT.get @model.contentId()
+      if @model != @model.dereference()
+        contentModel = @model.dereference()
         @listenTo contentModel, 'change:title', (newTitle, model, options) =>
           @render() if !@model.get 'title'
 
@@ -717,7 +724,7 @@ define [
       return {
         children: @collection?.length
         # Some rendered nodes are pointers to pieces of content. include the content.
-        content: Models.ALL_CONTENT.get(@model.contentId()).toJSON() if @model.contentId?()
+        content: @model.dereference().toJSON() if @model != @model.dereference()
         editAction: !!@model.editAction
         parent: !!@model.parent
       }
@@ -739,11 +746,13 @@ define [
       # Since we use jqueryui's draggable which is loaded when Aloha loads
       # delay until Aloha is finished loading
       Aloha.ready =>
-        _EnableContentDragging(@model, $body.children '.organization-node,*[data-media-type]')
+        _EnableContentDragging(@model, $body.children '*[data-media-type]')
 
         validSelectors = _.map @model.accepts(), (mediaType) -> "*[data-media-type=\"#{mediaType}\"]"
-        validSelectors.push '.organization-node'
         validSelectors = validSelectors.join ','
+
+        expandTimeout = null
+        expandNode = => @toggleExpanded(true) if @collection?.length > 0
 
         $body.children('.editor-drop-zone').add(@$el.children('.editor-drop-zone')).droppable
           greedy: true
@@ -751,6 +760,11 @@ define [
           accept: validSelectors
           activeClass: 'editor-drop-zone-active'
           hoverClass: 'editor-drop-zone-hover'
+          # If hovering over a node that has children but is not expanded
+          # Expand after a period of time.
+          # over: => expandTimeout = setTimeout(expandNode, DELAY_BEFORE_SAVING)
+          # out: => clearTimeout expandTimeout
+
           drop: (evt, ui) =>
             # Possible drop cases:
             #
@@ -763,9 +777,6 @@ define [
 
             # Perform all of these DOM cleanup events once jQueryUI is finished with its events
             delay = =>
-
-              # If $drag is not a `li.organization-node` then it has a `*[data-media-type]`
-              # and should be converted to a link inside an `li`
 
               drag = $drag.data('editor-model')
 
