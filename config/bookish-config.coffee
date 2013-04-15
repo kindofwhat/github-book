@@ -19,7 +19,7 @@ require.config
     marionette: 'lib/backbone.marionette'
 
     # ## UI libraries
-    aloha: 'lib/Aloha-Editor/src/lib/aloha'
+    aloha: 'http://wysiwhat.github.io/Aloha-Editor/src/lib/aloha'
     bootstrap: 'lib/bootstrap/js/bootstrap'
     select2: 'lib/select2/select2'
 

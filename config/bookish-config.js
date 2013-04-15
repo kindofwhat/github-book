@@ -12,7 +12,7 @@
       underscore: 'node_modules/underscore/underscore',
       backbone: 'node_modules/backbone/backbone',
       marionette: 'lib/backbone.marionette',
-      aloha: 'lib/Aloha-Editor/src/lib/aloha',
+      aloha: 'http://wysiwhat.github.io/Aloha-Editor/src/lib/aloha',
       bootstrap: 'lib/bootstrap/js/bootstrap',
       select2: 'lib/select2/select2',
       'font-awesome': 'lib/Font-Awesome/css/font-awesome',
