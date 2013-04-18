@@ -15,12 +15,11 @@
     "backbone": ">=0.9.9"
   },
   "devDependencies": {
-    "docco": "~0.4.0",
-    "mockjaxify": "*"
+    "docco": "~0.4.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/philschatz/atc.git"
+    "url": "https://github.com/Connexions/atc.git"
   },
   "keywords": [
     "javascript",
