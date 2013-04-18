@@ -7,6 +7,14 @@
     DEBUG = true;
     ROOT_URL = '';
     WORKSPACE_URL = "" + ROOT_URL + "/workspace/";
+    Backbone.ajax = function(config) {
+      config = _.extend(config, {
+        headers: {
+          'X-REMOTEAUTHID': 'https://paulbrian.myopenid.com'
+        }
+      });
+      return Backbone.$.ajax.apply(Backbone.$, [config]);
+    };
     Auth.url = function() {
       return "" + ROOT_URL + "/me/";
     };
@@ -57,14 +65,6 @@
           doNotReparse: true
         });
       });
-    };
-    Backbone.ajax = function(config) {
-      config = _.extend(config, {
-        headers: {
-          'X-REMOTEAUTHID': 'https://paulbrian.myopenid.com'
-        }
-      });
-      return Backbone.$.ajax.apply(Backbone.$, [config]);
     };
     Models.Folder.prototype.parse = function(obj) {
       var models;

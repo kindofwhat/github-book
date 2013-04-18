@@ -22,6 +22,14 @@ define [
   ROOT_URL = ''
   WORKSPACE_URL = "#{ROOT_URL}/workspace/"
 
+  # HACK: to always get an authenticated user
+  # by adding a request header
+  Backbone.ajax = (config) ->
+    config = _.extend config,
+      headers:
+        'X-REMOTEAUTHID': 'https://paulbrian.myopenid.com'
+    Backbone.$.ajax.apply(Backbone.$, [config])
+
   # Find out who the current user is logged in as
   Auth.url = -> "#{ROOT_URL}/me/"
   Auth.fetch()
@@ -68,15 +76,6 @@ define [
     # Change it in the book body
     @navTreeRoot.on 'all', => @set {body: NAV_SERIALIZE @navTreeRoot.toJSON()}, {doNotReparse:true}
     @navTreeRoot.descendants.on 'all', => @set {body: NAV_SERIALIZE @navTreeRoot.toJSON()}, {doNotReparse:true}
-
-
-  # HACK: to always get an authenticated user
-  # by adding a request header
-  Backbone.ajax = (config) ->
-    config = _.extend config,
-      headers:
-        'X-REMOTEAUTHID': 'https://paulbrian.myopenid.com'
-    Backbone.$.ajax.apply(Backbone.$, [config])
 
 
   # A folder contains a title and a collection of items in the folder
