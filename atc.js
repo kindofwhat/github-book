@@ -19,14 +19,14 @@
       return "" + ROOT_URL + "/me/";
     };
     Auth.fetch();
-    Models.BaseContent.prototype.url = function() {
+    Models.BaseContent.prototype.urlPrefix = "" + ROOT_URL + "/module";
+    Models.BaseBook.prototype.urlPrefix = "" + ROOT_URL + "/collection";
+    Models.Folder.prototype.urlPrefix = "" + ROOT_URL + "/folder";
+    Models.Deferrable.prototype.url = function() {
       if (this.isNew()) {
-        return "" + ROOT_URL + "/module/";
+        return "" + this.urlPrefix + "/";
       }
-      return "" + ROOT_URL + "/module/" + this.id;
-    };
-    Models.BaseBook.prototype.url = function() {
-      return "" + ROOT_URL + "/collection/" + this.id;
+      return "" + this.urlPrefix + "/" + this.id;
     };
     oldBaseBook_initialize = Models.BaseBook.prototype.initialize;
     Models.BaseBook.prototype.initialize = function() {
@@ -65,9 +65,6 @@
           doNotReparse: true
         });
       });
-    };
-    Models.Folder.prototype.url = function() {
-      return "" + ROOT_URL + "/folder/" + this.id;
     };
     Models.Folder.prototype.parse = function(obj) {
       var models;
