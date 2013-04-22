@@ -75,6 +75,9 @@
       });
     };
     XhtmlModel = AtcModels.BaseContent.extend({
+      defaults: {
+        title: null
+      },
       mediaType: 'application/xhtml+xml',
       parse: function(html) {
         var $body, $head, $html, $images, counter, _ref, _ref1,
@@ -157,6 +160,12 @@
     AtcModels_Folder_accepts.push(XhtmlModel.prototype.mediaType);
     AtcModels.Folder.prototype.accepts = function() {
       return AtcModels_Folder_accepts;
+    };
+    AtcModels.BookTocNode.prototype.accepts = function() {
+      return [XhtmlModel.prototype.mediaType, AtcModels.Folder.prototype.mediaType, AtcModels.BookTocNode.prototype.mediaType];
+    };
+    EpubModels.PackageFile.prototype.accepts = function() {
+      return [XhtmlModel.prototype.mediaType, AtcModels.Folder.prototype.mediaType, AtcModels.BookTocNode.prototype.mediaType];
     };
     STORED_KEYS = ['repoUser', 'repoName', 'branch', 'rootPath', 'id', 'password'];
     Auth.on('change', function() {

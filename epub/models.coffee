@@ -43,12 +43,6 @@ define [
         return xmlStr
     serialize: -> @template @toJSON()
 
-  HTMLFile = BaseContent.extend _.extend {}, TemplatedFileMixin, {
-    mediaType: 'application/xhtml+xml'
-    getterField: 'body'
-    serialize: -> @get @getterField
-  }
-
   PackageFileMixin = mixin TemplatedFileMixin,
     defaults: _.defaults(BaseBook.prototype.defaults,
       language: 'en'
@@ -72,7 +66,7 @@ define [
 
       # When the `navTreeStr` is changed on the package,
       # CHange it on the navigation.html file
-      @listenTo @navTreeRoot, 'change:treeNode add:treeNode remove:treeNode', =>
+      @listenTo @navTreeRoot.descendants, 'change change:treeNode add:treeNode remove:treeNode', =>
 
         $newTree = jQuery(@navModel.get 'body')
 
@@ -129,9 +123,10 @@ define [
               if node.id and node.id.search('#') < 0
                 path = resolvePath(@navModel.id, node.id)
                 model = Models.ALL_CONTENT.get path
+                isDirty = model.get('_isDirty')
                 model.set {title: node.title}
                 # Do not mark the object as 'dirty' (for saving)
-                delete model.changed
+                model.set {_isDirty:isDirty}
               recSetTitles(node.children)
           recSetTitles navTree
 
@@ -214,7 +209,7 @@ define [
 
       json
 
-    accepts: -> [ HTMLFile::mediaType, Models.Folder::mediaType ]
+    accepts: -> [ Models.Folder::mediaType ]
 
 
   PackageFile = BaseBook.extend PackageFileMixin
@@ -239,14 +234,13 @@ define [
       return ret
 
 
-  # Add the `HTMLFile` and `PackageFile` to the media types registry.
-  HTMLFile::editAction = -> Controller.editContent @
+  # Add the `PackageFile` to the media types registry.
   PackageFile::editAction = -> Controller.editBook @
-  Models.BookTocNode::accepts = -> [ Models.BookTocNode::mediaType, HTMLFile::mediaType ]
+  Models.BookTocNode::accepts = -> [ Models.BookTocNode::mediaType ]
 
-  MEDIA_TYPES.add HTMLFile
   MEDIA_TYPES.add PackageFile
 
   exports.EPUB_CONTAINER = new EPUBContainer()
+  exports.PackageFile = PackageFile
 
   return exports
