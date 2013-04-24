@@ -38,11 +38,6 @@
               href="toc.xhtml"
               media-type="application/xhtml+xml"/>
     
-        <item id="titlepage-xhtml"
-          
-              href="titlepage.xhtml"
-              media-type="application/xhtml+xml"/>
-    
         <item id="copyright-xhtml"
           
               href="copyright.xhtml"
@@ -116,6 +111,11 @@
         <item id="chapter_002-xhtml"
           
               href="chapter_002.xhtml"
+              media-type="application/xhtml+xml"/>
+    
+        <item id="titlepage-xhtml"
+          
+              href="titlepage.xhtml"
               media-type="application/xhtml+xml"/>
     
     </manifest>
