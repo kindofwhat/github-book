@@ -36,10 +36,6 @@ define ['jquery'], (jQuery) ->
         'common/table'
         'extra/draganddropfiles'
         'common/image'
-        'oer/popover'
-        'oer/math'
-        'oer/assorted'
-        'oer/note'
       ]
 
       # This whole thing is what's needed to:
