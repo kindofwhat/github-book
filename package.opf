@@ -68,11 +68,6 @@
               href="chapter_130.xhtml"
               media-type="application/xhtml+xml"/>
     
-        <item id="chapter_131-xhtml"
-          
-              href="chapter_131.xhtml"
-              media-type="application/xhtml+xml"/>
-    
         <item id="chapter_132-xhtml"
           
               href="chapter_132.xhtml"
@@ -116,6 +111,11 @@
         <item id="titlepage-xhtml"
           
               href="titlepage.xhtml"
+              media-type="application/xhtml+xml"/>
+    
+        <item id="chapter_131-xhtml"
+          
+              href="chapter_131.xhtml"
               media-type="application/xhtml+xml"/>
     
     </manifest>
