@@ -24,7 +24,8 @@
         return this.model.signOut();
       },
       forkBook: function() {
-        var $fork, forkHandler;
+        var $fork, forkHandler,
+          _this = this;
         if (!this.model.get('id')) {
           return alert('Please log in to fork or just go to the github page and fork the book!');
         }
@@ -43,16 +44,16 @@
             });
           };
         };
-        return Auth.getUser().orgs(function(err, orgs) {
+        return Auth.getUser().orgs().done(function(orgs) {
           var $item, $list;
           $list = $fork.find('.modal-body').empty();
-          $item = this.$(FORK_BOOK_ITEM({
+          $item = jQuery(FORK_BOOK_ITEM({
             login: Auth.get('id')
           }));
           $item.find('button').on('click', forkHandler(null));
           $list.append($item);
           _.each(orgs, function(org) {
-            $item = this.$(FORK_BOOK_ITEM({
+            $item = jQuery(FORK_BOOK_ITEM({
               login: "" + org.login + " (Organization)"
             }));
             $item.addClass('disabled');

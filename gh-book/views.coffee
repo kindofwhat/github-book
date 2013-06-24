@@ -64,15 +64,15 @@ define [
           alert 'Thanks for copying!\nThe current repository (in settings) will be updated to point to your copy of the book. \nThe next time you click Save the changes will be saved to your copied book.\nIf not, refresh the page and change the Repo User in Settings.'
 
 
-      Auth.getUser().orgs (err, orgs) ->
+      Auth.getUser().orgs().done (orgs) =>
         $list = $fork.find('.modal-body').empty()
 
-        $item = @$(FORK_BOOK_ITEM {login: Auth.get 'id'})
+        $item = jQuery(FORK_BOOK_ITEM {login: Auth.get 'id'})
         $item.find('button').on 'click', forkHandler(null)
         $list.append $item
 
         _.each orgs, (org) ->
-          $item = @$(FORK_BOOK_ITEM {login: "#{org.login} (Organization)"})
+          $item = jQuery(FORK_BOOK_ITEM {login: "#{org.login} (Organization)"})
           # For now disallow forking to organizations.
           #     $item.find('button').on 'click', forkHandler(org)
           $item.addClass 'disabled'
