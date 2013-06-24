@@ -12,9 +12,9 @@ define ['github', 'backbone'], (Github, Backbone) ->
       auth: 'basic'
 
       repoUser: 'philschatz'
-      repoName: 'github-book'
+      repoName: 'books'
 
-      branch: 'sample-book'
+      branch: 'master'
       # **Remember:** `rootPath` always needs a trailing slash!
       rootPath: ''
 
