@@ -36,6 +36,7 @@ define ['jquery'], (jQuery) ->
         'common/table'
         'extra/draganddropfiles'
         'common/image'
+        'common/contenthandler'
       ]
 
       # This whole thing is what's needed to:

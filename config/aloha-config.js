@@ -21,7 +21,7 @@
       },
       errorhandling: true,
       plugins: {
-        load: ['oer/toolbar', 'common/ui', 'common/format', 'common/paste', 'common/block', 'common/list', 'common/table', 'extra/draganddropfiles', 'common/image'],
+        load: ['oer/toolbar', 'common/ui', 'common/format', 'common/paste', 'common/block', 'common/list', 'common/table', 'extra/draganddropfiles', 'common/image', 'common/contenthandler'],
         draganddropfiles: {
           upload: {
             config: {
