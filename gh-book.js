@@ -2,7 +2,7 @@
 (function() {
 
   define(['underscore', 'backbone', 'bookish/media-types', 'bookish/controller', 'bookish/models', 'epub/models', 'bookish/auth', 'gh-book/views'], function(_, Backbone, MEDIA_TYPES, Controller, AtcModels, EpubModels, Auth, Views) {
-    var $signin, AtcModels_Folder_accepts, DEBUG, STORED_KEYS, XhtmlModel, b, props, readBinaryFile, readDir, readFile, resetDesktop, uuid, writeFile,
+    var $signin, AtcModels_Folder_accepts, DEBUG, STORED_KEYS, XhtmlModel, b, props, readBinaryFile, readDir, readFile, resetDesktop, resolvePath, uuid, writeFile,
       _this = this;
     DEBUG = true;
     uuid = b = function(a) {
@@ -23,6 +23,29 @@
     };
     readDir = function(path) {
       return Auth.getRepo().contents(Auth.get('branch'), path);
+    };
+    resolvePath = function(context, relPath) {
+      var i, parts, path;
+      if (context.search('/') < 0) {
+        return relPath;
+      }
+      path = context.replace(/\/[^\/]*$/, '') + '/' + relPath.split('#')[0];
+      parts = path.split('/');
+      i = 0;
+      while (i < parts.length) {
+        switch (parts[i]) {
+          case '.':
+            parts.splice(i, 1);
+            break;
+          case '..':
+            parts.splice(i - 1, 2);
+            i -= 1;
+            break;
+          default:
+            i++;
+        }
+      }
+      return parts.join('/');
     };
     Backbone.sync = function(method, model, options) {
       var id, path, ret,
@@ -119,6 +142,7 @@
           var $img, doneLoading, src;
           $img = jQuery(img);
           src = $img.attr('data-src');
+          src = resolvePath(_this.id, src);
           return doneLoading = readBinaryFile(src).done(function(bytes, statusMessage, xhr) {
             var encode, encoded, mediaType, _ref;
             mediaType = AtcModels.ALL_CONTENT.get(src).mediaType;

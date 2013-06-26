@@ -25,6 +25,25 @@ define [
   readDir =        (path) -> Auth.getRepo().contents   Auth.get('branch'), path
 
 
+  # Links in a navigation document are relative to where the nav document resides.
+  # If it does not live in the same directory then they need to be resolved to
+  # an absolute path so content Models can be looked up
+  resolvePath = (context, relPath) ->
+    return relPath if context.search('/') < 0
+    path = context.replace(/\/[^\/]*$/, '') + '/' + relPath.split('#')[0]
+    # path may still contain '..' so clean those up
+    parts = path.split('/')
+
+    i = 0
+    while i < parts.length
+      switch parts[i]
+        when '.' then parts.splice(i, 1)
+        when '..' then parts.splice(i-1, 2); i -= 1
+        else i++
+
+    parts.join '/'
+
+
 
 
   Backbone.sync = (method, model, options) ->
@@ -123,6 +142,12 @@ define [
       $images.each (i, img) =>
         $img = jQuery(img)
         src = $img.attr 'data-src'
+
+        # Images are relative to the HTML file
+        # and need to be relative to the root of the EPUB.
+        # Fortunately the id of the HTML file is relative to the root of the EPUB.
+        src = resolvePath(@id, src)
+
         # Load the image file somehow (see below for my github.js changes)
         doneLoading = readBinaryFile(src)
         .done (bytes, statusMessage, xhr) =>
