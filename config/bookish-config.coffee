@@ -51,7 +51,10 @@ require.config
     # ## Core Libraries
     jquery:
       exports: 'jQuery'
-      init: -> # this.jQuery.noConflict(true)
+      init: ->
+        # this.jQuery.noConflict(true)
+        this.jQuery.browser.version = 10000;
+        this.jQuery
 
     underscore:
       exports: '_'

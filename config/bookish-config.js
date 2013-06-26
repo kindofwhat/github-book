@@ -25,7 +25,10 @@
     shim: {
       jquery: {
         exports: 'jQuery',
-        init: function() {}
+        init: function() {
+          this.jQuery.browser.version = 10000;
+          return this.jQuery;
+        }
       },
       underscore: {
         exports: '_'
