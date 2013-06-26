@@ -121,8 +121,7 @@ define [
           recSetTitles = (nodes=[]) =>
             for node in nodes
               if node.id and node.id.search('#') < 0
-                path = resolvePath(@navModel.id, node.id)
-                model = Models.ALL_CONTENT.get path
+                model = Models.ALL_CONTENT.get node.id
                 isDirty = model.get('_isDirty')
                 model.set {title: node.title}
                 # Do not mark the object as 'dirty' (for saving)
@@ -151,6 +150,14 @@ define [
       $nav = $nav.first()
 
       navTree = @parseNavTree($nav).children
+      # Links in the navTree are relative to the location of the TOC HTML file, not the EPUB root
+      # So fix them up.
+      makeRelativePaths = (children) =>
+        for node in children
+          node.id = resolvePath(@navModel.id, node.id) if node.id
+          makeRelativePaths(node.children) if node.children
+      makeRelativePaths navTree
+
       @navTreeRoot.reset navTree
       return navTree
 

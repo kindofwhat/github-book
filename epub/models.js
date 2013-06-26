@@ -104,7 +104,7 @@
               silent: true
             });
             recSetTitles = function(nodes) {
-              var isDirty, model, node, path, _i, _len, _results;
+              var isDirty, model, node, _i, _len, _results;
               if (nodes == null) {
                 nodes = [];
               }
@@ -112,8 +112,7 @@
               for (_i = 0, _len = nodes.length; _i < _len; _i++) {
                 node = nodes[_i];
                 if (node.id && node.id.search('#') < 0) {
-                  path = resolvePath(_this.navModel.id, node.id);
-                  model = Models.ALL_CONTENT.get(path);
+                  model = Models.ALL_CONTENT.get(node.id);
                   isDirty = model.get('_isDirty');
                   model.set({
                     title: node.title
@@ -132,7 +131,8 @@
         });
       },
       _updateNavTreeFromXML: function(xmlStr, options) {
-        var $body, $nav, $xml, navTree;
+        var $body, $nav, $xml, makeRelativePaths, navTree,
+          _this = this;
         $xml = jQuery(xmlStr);
         if (!$xml[0]) {
           return this.trigger('error', 'Could not parse XML');
@@ -144,6 +144,23 @@
         }
         $nav = $nav.first();
         navTree = this.parseNavTree($nav).children;
+        makeRelativePaths = function(children) {
+          var node, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = children.length; _i < _len; _i++) {
+            node = children[_i];
+            if (node.id) {
+              node.id = resolvePath(_this.navModel.id, node.id);
+            }
+            if (node.children) {
+              _results.push(makeRelativePaths(node.children));
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
+        };
+        makeRelativePaths(navTree);
         this.navTreeRoot.reset(navTree);
         return navTree;
       },
